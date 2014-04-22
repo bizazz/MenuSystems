@@ -1,3 +1,7 @@
+<?php
+$menu_id = 1;
+$cat_id = 32;
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +37,9 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body class="">
+  	
+  	<input type="hidden" id="menu_id" value="<?php echo $menu_id; ?> "/>
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,18 +78,18 @@
     <div class="container">
       <div class="page-header">
         <h1>Menu Name</h1>
-       
-      <!-- Begin menu content -->  
-      </div>
- 		<ul id="menu">
- 			<li>Category
- 				<ul id="items">
- 					<li>Bacon Cheeseburger . . . . . . . . . . . . . . . . 7.99<br/>
- 						1/4 lb. 100% pure Angus Beef with applewood smoked bacon and your choice of toppings.
- 					</li>
- 				</ul>	
- 			</li>
- 	     </ul>
+ 	</div>
+ 	<div id="menu">
+ 		
+ 	</div>
+		<ol class='category'>
+			<li>Category
+				<ol class='items'>
+					
+					
+				</ol>
+			</li>
+		</ol>
       </div>
       
     <div id="footer">
@@ -91,14 +97,32 @@
         <p class="text-muted">© MenuSystems by Bizazz 2014</p>
       </div>
     </div>
-    
+    <input type="hidden" id="menu_id" value="<?php echo $menu_id; ?> "/>
 
 
-    <!-- Bootstrap core JavaScript
+    <!-- Core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="jquery-ui/js/jquery-ui-1.10.4.min.js"></script>"
+    <script src='jquery-sortable/jquery-sortable.js'></script>
+    
+    
+    <!-- Sortable Items -->
+    <script>$(function  () {
+	    $("ol.category").sortable()
+	    })
+    </script>
+    
+    <!-- Load Menu Data-->
+	<script type="text/javascript">
+	$(document).ready(function() {
+    	$('.items').load("query.php", 
+		    {
+		        'menu_id': '<?php echo $menu_id; ?>'
+		    } 
+		);
+    });
+		</script>
   </body>
 </html>
