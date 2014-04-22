@@ -10,6 +10,8 @@
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
     <title>MenuSystems</title>
+    
+    <link href="css/menusystems.css" rel="stylesheet">
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -73,12 +75,20 @@
        
       <!-- Begin menu content -->  
       </div>
- 		
+ 		<ul id="menu">
+ 			<li>Category
+ 				<ul id="items">
+ 					<li>Bacon Cheeseburger . . . . . . . . . . . . . . . . 7.99<br/>
+ 						1/4 lb. 100% pure Angus Beef with applewood smoked bacon and your choice of toppings.
+ 					</li>
+ 				</ul>	
+ 			</li>
+ 	     </ul>
       </div>
       
     <div id="footer">
       <div class="container">
-        <p class="text-muted">Copyright MenuSystems by Bizazz 2014</p>
+        <p class="text-muted">© MenuSystems by Bizazz 2014</p>
       </div>
     </div>
     
@@ -89,5 +99,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="jquery-ui/js/jquery-ui-1.10.4.min.js"></script>"
   </body>
 </html>
