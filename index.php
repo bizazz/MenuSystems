@@ -1,6 +1,5 @@
 <?php
 $menu_id = 1;
-$cat_id = 32;
 ?>
 
 <!DOCTYPE html>
@@ -82,14 +81,18 @@ $cat_id = 32;
  	<div id="menu">
  		
  	</div>
-		<ol class='category'>
-			<li>Category
+ 	
+ 	<div class='menu'>
+		<ol class='categories'>
+			
 				<ol class='items'>
 					
-					
 				</ol>
-			</li>
 		</ol>
+	</div>
+	
+	<!-- container end
+    ================================================== -->
       </div>
       
     <div id="footer">
@@ -110,19 +113,31 @@ $cat_id = 32;
     
     <!-- Sortable Items -->
     <script>$(function  () {
-	    $("ol.category").sortable()
+	    $(".menu").sortable()
 	    })
     </script>
     
-    <!-- Load Menu Data-->
+    <!-- Load Item Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.items').load("query.php", 
+    	$('.items').load("query_items.php", 
 		    {
-		        'menu_id': '<?php echo $menu_id; ?>'
+		        'menu_id_cat': '<?php echo $menu_id; ?>'
 		    } 
 		);
     });
-		</script>
+	</script>
+	
+	<!-- Load Category Data-->
+	<script type="text/javascript">
+	$(document).ready(function() {
+    	$('.categories').load("query_categories.php", 
+		    {
+		        'menu_id_item': '<?php echo $menu_id; ?>'
+		    } 
+		);
+    });
+	</script>
+	
   </body>
 </html>
