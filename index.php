@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-    <title>Stephen Legge</title>
+    <title>MenuSystems</title>
     
     <link href="css/menusystems.css" rel="stylesheet">
 
