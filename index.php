@@ -23,9 +23,6 @@ $menu_id = 1;
     <!-- X-editable CSS -->
     <link href="x-editable/css/bootstrap-editable.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="sticky-footer-navbar.css" rel="stylesheet">
-
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -80,11 +77,15 @@ $menu_id = 1;
  	</div>
  	
  	
- 	<ol class="default vertical">
+ 	<div class="">
 		
-	</ol> 	
-
+	</div> 	
 	
+	<ol class="default vertical items">
+		
+		
+	</ol>
+
 	<!-- container end
     ================================================== -->
       </div>
@@ -114,13 +115,17 @@ $menu_id = 1;
     <!-- Load Item Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.default').load("query_items.php", 
+    	$('.items').load("query_items.php", 
 		    {
 		        'menu_id_item': '<?php echo $menu_id; ?>'
 		    } 
 		);
+
     });
 	</script>
+
 	
+			
+		
   </body>
 </html>
