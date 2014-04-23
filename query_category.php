@@ -12,22 +12,21 @@
 		
 	while($row = mysqli_fetch_array($result)) {
 	    	
-	    $show_cat = $row['item_cat'];
+	    $show_cat = $row['cat_categ'];
 	    if ($hide_cat != $show_cat) { 
 	    $hide_cat = $show_cat;
 	    
 		echo "<li>" . $row ['cat_categ'] ; 
-		} //End of Categories Repeat
+		} //End of Repeat
 		
-		do { 
 		echo "<ol>";
-		} while ($show_cat = $row['item_cat']);
 		
-		echo "<li>" . $row ['item_item'] . "</li>"; 
-		} //End of Repeat	
+		echo "<li>" . $row['item_item'] . "</li>"; 
+		
 		echo "</ol>";
-	
+
 		echo "</li>";
+	} 
 	
 	//<li>Appetizers
 		//<ol>
