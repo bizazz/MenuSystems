@@ -78,18 +78,12 @@ $menu_id = 1;
       <div class="page-header">
         <h1>Menu Name</h1>
  	</div>
- 	<div id="menu">
- 		
- 	</div>
  	
- 	<div class='menu'>
-		<ol class='categories'>
-			
-				<ol class='items'>
-					
-				</ol>
-		</ol>
-	</div>
+ 	
+ 	<ol class="default vertical">
+		
+	</ol> 	
+
 	
 	<!-- container end
     ================================================== -->
@@ -108,30 +102,19 @@ $menu_id = 1;
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src='jquery-sortable/jquery-sortable.js'></script>
+    <script src='jquery-sortable/Sortable_files/application.js'></script>
     
     
     <!-- Sortable Items -->
     <script>$(function  () {
-	    $(".menu").sortable()
+	    $(".default").sortable()
 	    })
     </script>
     
     <!-- Load Item Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.items').load("query_items.php", 
-		    {
-		        'menu_id_cat': '<?php echo $menu_id; ?>'
-		    } 
-		);
-    });
-	</script>
-	
-	<!-- Load Category Data-->
-	<script type="text/javascript">
-	$(document).ready(function() {
-    	$('.categories').load("query_categories.php", 
+    	$('.default').load("query_items.php", 
 		    {
 		        'menu_id_item': '<?php echo $menu_id; ?>'
 		    } 

@@ -1,7 +1,7 @@
 	<?php
 	
 	include ('connect.php');
-	
+
 	$hide_cat = "";
 	
 	$menu_id_cat = $_POST['menu_id_cat'];
@@ -14,7 +14,7 @@
 	  $show_cat = $row['cat_categ'];
 	  if ($hide_cat != $show_cat) { 
 	  $hide_cat = $show_cat;	
-	  echo $row['cat_categ'];	
+	  echo "<li>" . $row['cat_categ'] . "</li>";
 	  } //End of Basic-UltraDev Simulated Nested Repeat
 	
 	}
