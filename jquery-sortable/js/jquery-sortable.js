@@ -27,7 +27,6 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ========================================================== */
 
-
 !function ( $, window, pluginName, undefined){
   var eventNames,
   containerDefaults = {

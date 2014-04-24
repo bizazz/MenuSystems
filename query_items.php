@@ -28,7 +28,7 @@
 	            echo "</div>";
 	        }
 	        // print this category and open the list of items
-	        echo "<div class='row grid span8'>" . $row['cat_categ'] . '<div>'; //'</div><div>';
+	        echo "<div class='row grid span8'>" . $row['cat_categ'] . "<div>"; //'</div><div>';
 	        // update the current category to be this cat_categ
 	        $category = $row['cat_categ']; 
 	    }
