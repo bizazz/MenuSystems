@@ -14,10 +14,12 @@ $menu_id = 1;
 
     <title>MenuSystems</title>
     
+    <!-- custom CSS -->
     <link href="css/menusystems.css" rel="stylesheet">
-
+    
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet">
     <link href="bootstrap/css/sticky-footer-navbar.css" rel="stylesheet">
     
     <!-- X-editable CSS -->
@@ -74,17 +76,18 @@ $menu_id = 1;
     <div class="container">
       <div class="page-header">
         <h1>Menu Name</h1>
- 	</div>
- 	
- 	
- 	<div class="">
-		
-	</div> 	
+ 	</div>	
 	
-	<ol class="default vertical items">
-		
-		
-	</ol>
+	<!--begin menu-->
+	<div id="menu">
+		<ol class="default vertical">
+			
+		</ol>
+	</div>
+	<!--end  menu-->
+	
+	
+	
 
 	<!-- container end
     ================================================== -->
@@ -107,15 +110,23 @@ $menu_id = 1;
     
     
     <!-- Sortable Items -->
-    <script>$(function  () {
-	    $(".default").sortable()
-	    })
-    </script>
+    <script>
+		$(function () {
+    $(".default").sortable({
+        tolerance: 'pointer',
+        revert: 'invalid',
+        placeholder: 'span2 well placeholder tile',
+        forceHelperSize: true
+    });
+});
+		
+		  
+	</script>
     
     <!-- Load Item Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.items').load("query_items.php", 
+    	$('.default').load("query_items.php", 
 		    {
 		        'menu_id_item': '<?php echo $menu_id; ?>'
 		    } 
@@ -124,7 +135,7 @@ $menu_id = 1;
     });
 	</script>
 
-	
+
 			
 		
   </body>

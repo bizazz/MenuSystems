@@ -1,0 +1,32 @@
+$topicname = '';
+
+	// open list of topics
+	echo "<ol class='default vertical'>";
+	
+	// loop through topics
+	while($row = mysql_fetch_array($result)) {
+	    if (!$row['TopicID']) {
+	        // fake topic name for unsorted stuff
+	        $row['TopicName'] = 'Sort Me';
+	    }
+	    if ($topicname != $row['TopicName']) {
+	        if($topicname != ''){
+	            // had a topic name, means we opened a list
+	            // that hasn't been closed, close it.
+	            echo "</ol>";
+	        }
+	        // print this topic and open the list of articles
+	        echo "<li>" . $row['TopicName'] . '</li><ol>';
+	        // update the current topic to be this TopicName
+	        $topicname = $row['TopicName']; 
+	    }
+	    // the news item
+	    echo "<li>" . $row['NewsID'] . "</li>";
+	}
+	if($topicname != ''){
+	    // we saw at least one TopicName, we need to close
+	    // the last open list.
+	    echo "</ol>";
+	}
+	// end topic list
+	echo "</ol>";
