@@ -24,6 +24,21 @@ $menu_id = 1;
     
     <!-- X-editable CSS -->
     <link href="x-editable/css/bootstrap-editable.css" rel="stylesheet">
+    <style>
+		.placeholder {
+		    border: 1px solid green;
+		    background-color: white;
+		    -webkit-box-shadow: 0px 0px 10px #888;
+		    -moz-box-shadow: 0px 0px 10px #888;
+		    box-shadow: 0px 0px 10px #888;
+		}
+		.tile {
+		    height: 100px;
+		}
+		.grid {
+		    margin-top: 1em;
+		}    	
+    </style>
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -79,10 +94,11 @@ $menu_id = 1;
  	</div>	
 	
 	<!--begin menu-->
-	<div id="menu">
-		<ol class="default vertical">
-			
-		</ol>
+	<div class="row grid span8">
+	    <div class="well span2 tile">A</div>
+	    <div class="well span2 tile">B</div>
+	    <div class="well span2 tile">C</div>
+	    <div class="well span4 tile">D</div>
 	</div>
 	<!--end  menu-->
 	
@@ -106,27 +122,25 @@ $menu_id = 1;
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src='jquery-sortable/Sortable_files/application.js'></script>
+    <script src='jquery-sortable/jquery-sortable.js'></script>
     
     
     <!-- Sortable Items -->
     <script>
-		$(function () {
-    $(".default").sortable({
-        tolerance: 'pointer',
-        revert: 'invalid',
-        placeholder: 'span2 well placeholder tile',
-        forceHelperSize: true
-    });
-});
-		
-		  
+	$(function () {
+	    $(".grid").sortable({
+	        tolerance: 'pointer',
+	        revert: 'invalid',
+	        placeholder: 'span2 well placeholder tile',
+	        forceHelperSize: true
+	    });
+	});
 	</script>
     
     <!-- Load Item Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.default').load("query_items.php", 
+    	$('').load("query_items.php", 
 		    {
 		        'menu_id_item': '<?php echo $menu_id; ?>'
 		    } 

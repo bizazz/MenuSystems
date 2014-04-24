@@ -25,23 +25,23 @@
 	        if($category != ''){
 	            // had a category, means we opened a list
 	            // that hasn't been closed, close it.
-	            echo "</ol>";
+	            echo "</div>";
 	        }
 	        // print this category and open the list of items
-	        echo "<li class=''>" . $row['cat_categ'] . '<ol>'; //'</li><ol>';
+	        echo "<div class='row grid span8'>" . $row['cat_categ'] . '<div>'; //'</div><div>';
 	        // update the current category to be this cat_categ
 	        $category = $row['cat_categ']; 
 	    }
 	    // the items
-	    echo "<li class=''>" . $row['item_item'] . "</li>";
+	    echo "<div class='well span2 tile'>" . $row['item_item'] . "</div>";
 	}
 	if($category != ''){
 	    // we saw at least one cat_categ, we need to close
 	    // the last open list.
-	    echo "</ol>";
+	    echo "</div>";
 	}
 	// end category list
-	//echo "</ol>";
+	//echo "</div>";
 		
 	// Free result set
 	mysqli_free_result($result);
