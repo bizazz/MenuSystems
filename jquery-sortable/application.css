@@ -11,31 +11,38 @@ body.dragging, body.dragging * {
 
 /* line 10, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
 ol.vertical {
+    width:100%;
   margin: 0 0 9px 0;
   min-height: 10px; }
   /* line 13, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
   ol.vertical li {
     display: block;
-    margin: 5px;
-    padding: 5px;
-    border: 1px solid #cccccc;
+    width:50%;
+    margin: 10px;
+    padding: 10px;
+    padding-left:0;
     color: #0088cc;
-    background: #eeeeee; }
+    background: ; }
   /* line 20, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
   ol.vertical li.placeholder {
     position: relative;
+    width:50%;
     margin: 0;
     padding: 0;
     border: none; }
     /* line 25, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
     ol.vertical li.placeholder:before {
-      position:relative;
-      width:48%;
-	  height:30px;
-	  margin: 5px;
-	  float:left;
-	  background-color:#D9D9D9
-      content: "";
+      position: relative;
+      display:block;
+      color:#eeeeee;
+      content: "M";
+      width: 50%;
+      margin: 0;
+      padding: 10px;
+      padding-left:0;
+      color: #ffffff;
+      background-color:#FFFFCC;
+       }
 
 /* line 32, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
 ol {
