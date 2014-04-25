@@ -28,12 +28,12 @@
 	            echo "</ol>";
 	        }
 	        // print this category and open the list of items
-	        echo "<li class=''>" . $row['cat_categ'] . '<ol>'; //'</li><ol>';
+	        echo "<li class='category clearfix'>" . $row['cat_categ'] . '<ol>'; //'</li><ol>';
 	        // update the current category to be this cat_categ
 	        $category = $row['cat_categ']; 
 	    }
 	    // the items
-	    echo "<li class=''>" . $row['item_item'] . "</li>";
+	    echo "<li class='items'>" . $row['item_item'] . "</li>";
 	}
 	if($category != ''){
 	    // we saw at least one cat_categ, we need to close

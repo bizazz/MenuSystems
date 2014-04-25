@@ -3,3 +3,11 @@ ol {
     list-style-type: none;
 }
 
+.category {
+	width:100%;
+}
+
+.items {
+	width:50%;
+	float:left;
+}
