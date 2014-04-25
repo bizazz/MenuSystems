@@ -125,7 +125,7 @@ $menu_id = 1;
     $("div.menu").sortable({
         tolerance: 'pointer',
         revert: 'invalid',
-        placeholder: 'span2 well placeholder tile',
+        placeholder: 'well placeholder tile',
         forceHelperSize: true
     });
 });
