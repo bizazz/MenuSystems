@@ -65,5 +65,16 @@
 	</div>
 
 </div>
+    <!-- Load Item Data-->
+	<script type="text/javascript">
+	$(document).ready(function() {
+    	$('wide').load("query_items.php", 
+		    {
+		        'menu_id_item': '<?php echo $menu_id; ?>'
+		    } 
+		);
+
+    });
+	</script>
 </body>
 </html>

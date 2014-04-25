@@ -5,14 +5,7 @@
 (function($){
 
  $.fn.columnize = function(options) {
-	this.cols  =[]; 
-	this.offset= 0; 
-	this.before=[];
-	this.lastOther=0;  
-	this.prevMax =0;
-	this.debug=0; 
-	this.setColumnStart =null;
-	this.elipsisText='';
+
 
 	var defaults = {
 		// default width of columns
@@ -45,9 +38,7 @@
 		manualBreaks : false,
 		// previx for all the CSS classes used by this plugin
 		// default to empty string for backwards compatibility
-		cssClassPrefix : "",
-		elipsisText:'...',
-		debug:0,	
+		cssClassPrefix : ""
 	};
 	options = $.extend(defaults, options);
 
@@ -55,29 +46,6 @@
 		options.width = parseInt(options.width,10);
 		if(isNaN(options.width)){
 			options.width = defaults.width;
-		}
-	}
-	if(typeof options.setColumnStart== 'function') {
-		this.setColumnStart=options.setColumnStart;
-	}
-	if(typeof options.elipsisText== 'string') {
-		this.elipsisText=options.elipsisText;
-	}
-	if(options.debug) { // assert is off by default
-		this.debug=options.debug;
-	}	
-	
-	/**
-	 * appending a text node to a <table> will
-	 * cause a jquery crash.
-	 * so wrap all append() calls and revert to
-	 * a simple appendChild() in case it fails
-	 */
-	function appendSafe($target, $elem){
-		try{
-			$target.append($elem);
-		}catch(e){
-			$target[0].appendChild($elem[0]);
 		}
 	}
 
@@ -96,7 +64,7 @@
 
 		var adjustment = 0;
 
-		appendSafe($cache, $(this).contents().clone(true));
+		$cache.append($(this).contents().clone(true));
 
 		// images loading after dom load
 		// can screw up the column heights,
@@ -110,7 +78,7 @@
 					var func = function($inBox,$cache){ return function(){
 							if(!$inBox.data("firstImageLoaded")){
 								$inBox.data("firstImageLoaded", "true");
-								appendSafe($inBox.empty(), $cache.children().clone(true));
+								$inBox.empty().append($cache.children().clone(true));
 								$inBox.columnize(options);
 							}
 						};
@@ -181,7 +149,7 @@
 					// our column is on a column break, so just end here
 					return;
 				}
-				appendSafe($putInHere, $(node));
+				$putInHere.append(node);
 			}
 			if($putInHere[0].childNodes.length === 0) return;
 
@@ -202,21 +170,14 @@
 				var columnText;
 				var latestTextNode = null;
 				while($parentColumn.height() < targetHeight && oText.length){
-					//
-					// it's been brought up that this won't work for chinese
-					// or other languages that don't have the same use of whitespace
-					// as english. This will need to be updated in the future
-					// to better handle non-english languages.
-					//
-					// https://github.com/adamwulf/Columnizer-jQuery-Plugin/issues/124
 					var indexOfSpace = oText.indexOf(' ', counter2);
 					if (indexOfSpace != -1) {
-						columnText = oText.substring(0, indexOfSpace);
+						columnText = oText.substring(0, oText.indexOf(' ', counter2));
 					} else {
 						columnText = oText;
 					}
 					latestTextNode = document.createTextNode(columnText);
-					appendSafe($putInHere, $(latestTextNode));
+					$putInHere.append(latestTextNode);
 
 					if(oText.length > counter2 && indexOfSpace != -1){
 						oText = oText.substring(indexOfSpace);
@@ -239,7 +200,7 @@
 			if($pullOutHere.contents().length){
 				$pullOutHere.prepend($item);
 			}else{
-				appendSafe($pullOutHere, $item);
+				$pullOutHere.append($item);
 			}
 
 			return $item[0].nodeType == 3;
@@ -264,7 +225,7 @@
 				var $cloneMe = $pullOutHere.contents(":first");
 				//
 				// make sure we're splitting an element
-				if( typeof $cloneMe.get(0) == 'undefined' || $cloneMe.get(0).nodeType != 1 ) return;
+				if($cloneMe.get(0).nodeType != 1) return;
 
 				//
 				// clone the node with all data and events
@@ -276,20 +237,20 @@
 					//
 					// ok, we have a columnbreak, so add it into
 					// the column and exit
-					appendSafe($putInHere, $clone);
+					$putInHere.append($clone);
 					$cloneMe.remove();
 				}else if (manualBreaks){
 					// keep adding until we hit a manual break
-					appendSafe($putInHere, $clone);
+					$putInHere.append($clone);
 					$cloneMe.remove();
 				}else if($clone.get(0).nodeType == 1 && !$clone.hasClass(prefixTheClassName("dontend"))){
-					appendSafe($putInHere, $clone);
+					$putInHere.append($clone);
 					if($clone.is("img") && $parentColumn.height() < targetHeight + 20){
 						//
 						// we can't split an img in half, so just add it
 						// to the column and remove it from the pullOutHere section
 						$cloneMe.remove();
-					}else if($cloneMe.hasClass(prefixTheClassName("dontsplit")) && $parentColumn.height() < targetHeight + 20){
+					}else if(!$cloneMe.hasClass(prefixTheClassName("dontsplit")) && $parentColumn.height() < targetHeight + 20){
 						//
 						// pretty close fit, and we're not allowed to split it, so just
 						// add it to the column, remove from pullOutHere, and be done
@@ -307,16 +268,9 @@
 						// it in half, leaving some of it in pullOutHere
 						$clone.empty();
 						if(!columnize($clone, $cloneMe, $parentColumn, targetHeight)){
-							// this node may still have non-text nodes to split
+							// this node still has non-text nodes to split
 							// add the split class and then recur
 							$cloneMe.addClass(prefixTheClassName("split"));
-							
-							//if this node was ol element, the child should continue the number ordering
-							if($cloneMe.get(0).tagName == 'OL'){
-								var startWith = $clone.get(0).childElementCount + $clone.get(0).start;
-								$cloneMe.attr('start',startWith+1);
-							}
-							
 							if($cloneMe.children().length){
 								split($clone, $cloneMe, $parentColumn, targetHeight);
 							}
@@ -328,7 +282,6 @@
 						if($clone.get(0).childNodes.length === 0){
 							// it was split, but nothing is in it :(
 							$clone.remove();
-							$cloneMe.removeClass(prefixTheClassName("split"));
 						}
 					}
 				}
@@ -384,14 +337,14 @@
 				overflow.innerHTML = html;
 
 			}else{
-				appendSafe($col, $destroyable.contents());
+				$col.append($destroyable);
 			}
 			$inBox.data("columnizing", false);
 
 			if(options.overflow && options.overflow.doneFunc){
 				options.overflow.doneFunc();
 			}
-			options.doneFunc();
+
 		}
 
 		/**
@@ -447,7 +400,7 @@
 			$inBox.empty();
 			$inBox.append($("<div style='width:" + (Math.floor(100 / numCols))+ "%; float: " + options.columnFloat + ";'></div>")); //"
 			$col = $inBox.children(":last");
-			appendSafe($col, $cache.clone());
+			$col.append($cache.clone());
 			maxHeight = $col.height();
 			$inBox.empty();
 
@@ -544,12 +497,7 @@
 					}
 				}
 				if(options.overflow && !scrollHorizontally){
-					var IE6 = false;
-					/*@cc_on 
-					@if (@_jscript_version < 5.7)
-						IE6 = true;
-					@end
-					@*/
+					var IE6 = false /*@cc_on || @_jscript_version < 5.7 @*/;
 					var IE7 = (document.all) && (navigator.appVersion.indexOf("MSIE 7.") != -1);
 					if(IE6 || IE7){
 						var html = "";
@@ -614,7 +562,7 @@
 						// hopefully this'll mean more content fits into
 						// earlier columns, so that the last column
 						// can be shorter than the rest
-						adjustment += 5;
+						adjustment += 30;
 
 						targetHeight = targetHeight + 30;
 						if(loopCount == maxLoops-1) maxLoops++;
@@ -648,8 +596,6 @@
 			}
 			$inBox.find(prefixTheClassName("column", true)).find(":first" + prefixTheClassName("removeiffirst", true)).remove();
 			$inBox.find(prefixTheClassName("column", true)).find(':last' + prefixTheClassName("removeiflast", true)).remove();
-			$inBox.find(prefixTheClassName("split", true)).find(":first" + prefixTheClassName("removeiffirst", true)).remove();
-			$inBox.find(prefixTheClassName("split", true)).find(':last' + prefixTheClassName("removeiflast", true)).remove();
 			$inBox.data("columnizing", false);
 
 			if(options.overflow){
@@ -659,204 +605,4 @@
 		}
     });
  };
-
-$.fn.renumberByJS=function($searchTag, $colno, $targetId, $targetClass ) {
-	this.setList = function($cols, $list, $tag1) {
-		var $parents	= this.before.parents();
-		var $rest;
-
-		$rest			= $($cols[this.offset-1]).find('>*');
-
-		if( ($rest.last())[0].tagName!=$tag1.toUpperCase()) {
-			if(this.debug) {
-				console.log("Last item in previous column, isn't a list...");
-			}
-			return 0;
-		}
-		$rest			= $rest.length;
-		var $tint		= 1;
-
-		if(this.lastOther<=0) {
-			$tint		= this.before.children().length+1;
-		} else {
-			$tint		= $($parents[this.lastOther]).children().length+1;
-		}
-		// if the first LI in the current column is split, decrement, as we want the same number/key
-		if( $($cols[this.offset]).find($tag1+':first li.split').length ) {
-			var $whereElipsis=$($cols[this.offset-1]).find($tag1+':last li:last');
-			if( this.elipsisText==='' || 
-				$($cols[this.offset-1]).find($tag1+':last ~ div').length || 
-				$($cols[this.offset-1]).find($tag1+':last ~ p').length  ) {
-				;
-			} else {
-				if($($whereElipsis).find('ul, ol, dl').length ==0 ) {
-
-					var $txt=$whereElipsis.last().text();
-					// char counting, 'cus MSIE 8 is appearently stupid
-					var $len=$txt.length;
-					if($txt.substring($len-1)==';') {
-						if($txt.substring($len-4)!=this.elipsisText+';') {
-							$txt=$txt.substring(0, $len-1)+this.elipsisText+';';
-						}
-					} else {
-						if($txt.substring($len-3)!=this.elipsisText) {
-							$txt+=this.elipsisText;
-						}
-					}
-					$whereElipsis.last().text($txt);
-				}
-			}
-			// an item in split between two columns.  it only holds one key...
-			if($($cols[this.offset]).find($tag1+':first >li.split >'+$tag1).length==0) {
-				$tint--; 
-			}
-		}
-		if($rest==1) {
-			// the last column only held one thing, so assume its wrapped to the column before that as well.
-			$tint		+= this.prevMax ;
-		}
-		if(this.nest>1) {
-			if(this.debug) {
-				console.log("Supposed to be a nested list...decr");
-			}
-			$tint--;
-// some how, id previous list starts split, need  secins decrement, 
-// if "split" is now correct, reference this
-			var $tt		= $($cols[this.offset -1]).find($tag1+':first li.split:first');
-			if($tt.length>0) {
-				if(this.debug) {
-					console.log("Previous column started with a split item, so that count is one less than expected");
-				}
-				$tint--;
-			}
-
-
-			$tt			= $($cols[this.offset]).find($tag1+':first li:first').clone();
-			$tt.children().remove();
-			if( $.trim($tt.text()).length>0 ){
-				if(this.debug) {
-					console.log("If that was a complete list in the previous column, don't decr.");
-				}
-				$tint++;
-
-				if($($cols[this.offset-1]).find(">"+$tag1+':last ').children().length==0 ) {
-					if(this.debug) {
-						console.log("unless that was empty, in which case revert");
-					}
-					$tint--;
-				}
-			}
-
-		} else {
-			var $tt		= $($cols[this.offset]).find($tag1+':first li:first '+$tag1+".split li.split");
-			if($tt.length>0) {
-				if(this.debug) {
-					console.log("[Nested] Column started with a split item, so that count is one less than expected");
-				}
-				$tint--;
-			}
-
-		}
-
-		if(this.debug) {
-			console.log("Setting the start value to "+$tint+" ("+this.prevMax +")");
-		}
-		if($tint >0) {
-			// if the above computation leads to 0, or an empty list (more likely), don't set, leave as 1
-			if(typeof this.setColumnStart == 'function') {
-				this.setColumnStart($list, $tint);
-			} else {
-				$list.attr('start', $tint);
-			}
-		}
-		return 0; 
-	}
-
-	if(typeof $targetId === 'undefined') { $targetId=false; }
-	if(typeof $targetClass === 'undefined') { $targetClass=false; }
-	if(! $targetId && !$targetClass ) {
-		throw "renumberByJS(): Bad param, must pass an id or a class";
-	}
-
-	var $target 			='';
-	this.prevMax			=1;
-	
-	if($targetClass) {
-		$target 			="."+$targetClass;
-	} else {
-		$target 			="#"+$targetId;
-	}
-	var $tag1				= $searchTag.toLowerCase();
-	var $tag2				= $searchTag.toUpperCase();
-	
-	this.cols  				= $($target);
-	if(this.debug) {
-		console.log("There are "+this.cols.length+" items, looking for "+$tag1);
-	}
-
-	this.before				= $(this.cols[0]).find($tag1+':last');
-	this.prevMax			= this.before.children().length;
-
-// start at 1, as must compare to previous...
-	for(this.offset=1; this.offset<this.cols.length; this.offset++) {
-		if(this.debug) {
-			console.log("iterating "+this.offset+"...[of "+this.cols.length+"]");
-		}
-// if the first column again, nothing to the left of you, do nothing...
-		if(this.offset % $colno==0) { 
-			if(this.debug) {
-				console.log("First column (in theory..)");
-			}
-
-			this.prevMax	= 1;
-			continue;
-		}
-		
-		this.before			= $(this.cols[this.offset-1]).find($tag1+':last');
-// if there are no occurences of the searchTag, do nothing
-		if(this.before.length) {
-			if(this.debug) {
-				console.log("Have some "+$searchTag+" elements in the previous column");
-			}
-
-			var $list		= $(this.cols[this.offset]).find($tag1+':first');
-			var $first		= $(this.cols[this.offset]).find('*:first');
-			if($first[0] !== $list[0]) {
-// don't renumber anything, its not a rollover list
-				continue;
-			}
-
-			var $parents	= this.before.parents();
-			this.lastOther	= 0;
-			var $found		= false;
-			for(; this.lastOther<$parents.length; this.lastOther++) {
-				if($parents[this.lastOther].tagName != $tag2 && $parents[this.lastOther].tagName != "LI") {
-					$found  = true;
-					this.lastOther--;
-					break;
-				}
-			}
-			
-			this.nest		=1;
-			if($(this.cols[this.offset]).find(">"+$tag1+':first li '+$tag1+":first").length) {
-				this.nest	= 2;
-			}
-			this.setList(this.cols, $list, $tag1);
-			this.lastOther--;
-			$list			= $(this.cols[this.offset]).find($tag1+':first li '+$tag1+":first");
-			if($list.length) {
-// I hope the two columns have same nesting, or its busted
-				
-				this.before= $(this.cols[this.offset-1]).find(">"+$tag1+':last li '+$tag1+":last");
-				this.prevMax= 0;
-				this.nest	=1;
-				this.setList(this.cols, $list, $tag1);
-			}
-			var $reset		= $(this.cols[this.offset-1]).find(">"+$tag1+':last');
-			this.prevMax	= $reset.children().length;
-		}
-	}
-	return 0;
-};
-
 })(jQuery);
