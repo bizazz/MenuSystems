@@ -14,9 +14,9 @@ $menu_id = 1;
 
     <title>MenuSystems</title>
     
-    <!-- custom CSS -->
+    <!-- custom CSS <link href="jquery-sortable/application.css" rel="stylesheet"> -->
     <link href="css/menusystems.css" rel="stylesheet">
-    <link href="jquery-sortable/application.css" rel="stylesheet">
+    
     
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -80,11 +80,10 @@ $menu_id = 1;
  	</div>	
 	
 	<!--begin menu-->
-	<div id="menu">
-		<ol class="default vertical">
-			
-		</ol>
-	</div>
+	
+	<ol class="default vertical panel list-group-item ">
+
+	</ol>
 	<!--end  menu-->
 	
 	
@@ -107,62 +106,40 @@ $menu_id = 1;
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src='jquery-sortable/Sortable_files/application.js'></script>
-    
+    <script src='jquery-sortable/jquery-sortable.js'></script>
     
     <!-- Sortable Items -->
     <script>
-		var adjustment
-
-		$("ol.vertical").sortable({
-		  group: 'vertical',
-		  // animation on drop
-		  onDrop: function  (item, targetContainer, _super) {
-		    var clonedItem = $('<li/>').css({height: 0})
-		    item.before(clonedItem)
-		    clonedItem.animate({'height': item.height()})
-		    
-		    item.animate(clonedItem.position(), function  () {
-		      clonedItem.detach()
-		      _super(item)
-		    })
-		  },
-		
-		  // set item relative to cursor position
-		  onDragStart: function ($item, container, _super) {
-		    var offset = $item.offset(),
-		    pointer = container.rootGroup.pointer
-		
-		    adjustment = {
-		      left: pointer.left - offset.left,
-		      top: pointer.top - offset.top
-		    }
-		
-		    _super($item, container)
-		  },
-		  onDrag: function ($item, position) {
-		    $item.css({
-		      left: position.left - adjustment.left,
-		      top: position.top - adjustment.top
-		    })
-		  }
-		})
+	$(function  () {
+  		$("ol.default").sortable()
+	})
 		
 		  
 	</script>
     
-    <!-- Load Item Data-->
+    <!-- Load url parameter and menu Data-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-    	$('.default').load("query_items.php", 
+		function getUrlParameter(sParam)
+	{
+	    var sPageURL = window.location.search.substring(1);
+	    var sURLVariables = sPageURL.split('&');
+	    for (var i = 0; i < sURLVariables.length; i++) 
+	    {
+	        var sParameterName = sURLVariables[i].split('=');
+	        if (sParameterName[0] == sParam) 
+	        {
+	            return sParameterName[1];
+	        }
+	    }
+	}
+		var menu_id = getUrlParameter('menu_id');
+    	$('ol.default').load("query_menu.php?menu_id=" + menu_id, 
 		    {
-		        'menu_id_item': '<?php echo $menu_id; ?>'
 		    } 
 		);
-
     });
 	</script>
-
 
 			
 		

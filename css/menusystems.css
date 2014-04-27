@@ -1,13 +1,23 @@
-ol {
-	padding: 0;
-    list-style-type: none;
+    ol {
+    	padding: 0;
+        list-style-type: none;
+    }
+    
+body.dragging, body.dragging * {
+  cursor: move !important;
 }
 
-.category {
-	width:100%;
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
 }
 
-.items {
-	width:50%;
-	float:left;
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
 }

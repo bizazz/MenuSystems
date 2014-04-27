@@ -6,6 +6,7 @@
 	
 	$menu_id_item = $_POST['menu_id_item'];
 	
+	
 	//ORDER BY categories.position,items.position
 	$sql = "SELECT * FROM categories,items WHERE categories.cat_id=items.item_cat AND categories.menu_id = '$menu_id_item' AND items.item_menu = '$menu_id_item' ORDER BY categories.cat_categ,items.item_item";
 	$result = mysqli_query($con,$sql);
