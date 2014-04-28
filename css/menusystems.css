@@ -1,23 +1,17 @@
-    ol {
-    	padding: 0;
-        list-style-type: none;
-    }
+
+ul {
+    list-style-type:none;
+    margin:0;
+    padding-left:17px;
+}
+
+li.cursor-sort {
+    cursor:all-scroll;
+}
+
+li.list-group-item {
     
-body.dragging, body.dragging * {
-  cursor: move !important;
 }
-
-.dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
-}
-
-ol.example li.placeholder {
-  position: relative;
-  /** More li styles **/
-}
-ol.example li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
+.formWrap {
+    margin-bottom:10px;
 }

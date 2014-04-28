@@ -30,3 +30,15 @@ $topicname = '';
 	}
 	// end topic list
 	echo "</ol>";
+	
+	
+	
+	echo "<div col-xs-12'><form class='itemForm' id='itemForm_" . $row['cat_id'] . "'" . "action='insert_item.php?menu_id=" . $menu_id . "'" . "method='POST'>"; 
+		    echo "<input type='hidden' name='menu_id' value='" . $menu_id . "' /> ";
+		    echo "<input type='hidden' name='item_cat' value='" . $row['cat_id'] . "' /> ";
+			echo "<input type='hidden' name='item_item' value='Item' /> ";
+			echo "<input type='hidden' name='item_price' value='Price' /> ";
+			echo "<input type='hidden' name='item_desc' value='Description' /> ";
+			echo "<input type='hidden' name='position' value='1' /> ";
+		    echo "<input type='submit' value='Add Item' class='submit btn btn-primary btn-xs'/>";
+		    echo "</form></div>";

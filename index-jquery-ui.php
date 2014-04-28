@@ -16,7 +16,7 @@ $menu_id = 1;
     
     <!-- custom CSS  -->
     <link href="css/menusystems.css" rel="stylesheet">
-    <link href="jquery-sortable/application.css" rel="stylesheet">
+    <link href="jquery-ui/application.css" rel="stylesheet">
     
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -36,7 +36,7 @@ $menu_id = 1;
     <![endif]-->
   </head>
 
-  <body class="">
+  <body>
   	
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -75,13 +75,12 @@ $menu_id = 1;
     <div class="container">
       <div class="page-header">
         <h1>Menu Name</h1>
- 	</div>	
+	</div>	
 	
-	<!--begin menu<div id="serialize_output2"></div>-->
-	
-	<ol class="default vertical panel list-group-item ">
-
-	</ol>
+	<!-- begin menu -->
+	<ul id="unique-ul">
+		
+	</ul>
 	<!--end  menu-->
 	
 	
@@ -89,63 +88,69 @@ $menu_id = 1;
 
 	<!-- container end
     ================================================== -->
-      </div>
+    </div>
       
     <div id="footer">
       <div class="container">
         <p class="text-muted">© MenuSystems by Bizazz 2014</p>
       </div>
     </div>
-    <input type="hidden" id="menu_id" value="<?php echo $menu_id; ?> "/>
-
 
     <!-- Core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src='jquery-sortable/application.js'></script>
+    <script src='jquery-ui/js/jquery-ui-1.10.4.min.js'></script>
+    <script src='jquery-form/jquery.form.min.js'></script>
     
     <!-- Sortable Items -->
     <script>
-	var group = $("ol.default").sortable({
-	  group: 'serialization',
-	  onDrop: function (item, container, _super) {
-	    var data = group.sortable("serialize").get();
-	
-	    var jsonString = JSON.stringify(data, null, ' ');
-	
-	    $('#serialize_output2').text(jsonString);
-	    _super(item, container)
-	  }
-	})
+	$(function(){
+    $('#unique-ul').sortable({
+    	items:'li',
+    	cursor: "move",
+    	toleranceElement: '> div'
+    	});
+    $( "#unique-ul" ).sortable({ cursorAt: { left: 5 } });
+    $( "#unique-ul" ).sortable({ opacity: 1 });
+    $( "#unique-ul" ).sortable({ revert: true });
+    $( "#unique-ul" ).sortable({ scroll: true });
+    $( "#unique-ul" ).sortable({ tolerance: "pointer" });
+    $( "#unique-ul" ).sortable({ helper: "clone" });
+	});
 	</script>
     
     <!-- Load url parameter and menu Data-->
 	<script type="text/javascript">
-	$(document).ready(function() {
-		function getUrlParameter(sParam)
-	{
-	    var sPageURL = window.location.search.substring(1);
-	    var sURLVariables = sPageURL.split('&');
-	    for (var i = 0; i < sURLVariables.length; i++) 
-	    {
-	        var sParameterName = sURLVariables[i].split('=');
-	        if (sParameterName[0] == sParam) 
-	        {
-	            return sParameterName[1];
-	        }
-	    }
-	}
-		var menu_id = getUrlParameter('menu_id');
-    	$('ol.default').load("query_menu.php?menu_id=" + menu_id, 
+		$(document).ready(function() {
+			function getUrlParameter(sParam)
+		{
+		    var sPageURL = window.location.search.substring(1);
+		    var sURLVariables = sPageURL.split('&');
+		    for (var i = 0; i < sURLVariables.length; i++) 
 		    {
-		    } 
-		);
-    });
-	</script>
-
+		        var sParameterName = sURLVariables[i].split('=');
+		        if (sParameterName[0] == sParam) 
+		        {
+		            return sParameterName[1];
+		        }
+		    }
+		}
+			var menu_id = getUrlParameter('menu_id');
 			
+	    	$('#unique-ul').load("query_menu.php?menu_id=" + menu_id, 
+			    {
+			    } 
+			);
+	    });
+		</script>
+		
+		<script>
+		    $('input[type="submit"]').one('click', function() {
+			     $('#unique-ul').load("query_menu.php?menu_id=" + menu_id)
+			});
+		</script>	
 		
   </body>
 </html>
