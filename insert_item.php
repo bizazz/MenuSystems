@@ -9,12 +9,10 @@
 	$item_desc = $_POST['item_desc'];
 	$position = $_POST['position'];
 	
-	$sql = "INSERT INTO items (item_menu, item_cat, item_item, item_price, item_desc, position)
-	VALUES ('$item_menu','$item_cat', '$item_item', '$item_price', '$item_desc', '$position')";
+	mysqli_query($con,"INSERT INTO items (item_menu, item_cat, item_item, item_price, item_desc, position)
+	VALUES ('$item_menu','$item_cat', '$item_item', '$item_price', '$item_desc', '$position')");
+
 	
-	if (!mysqli_query($con,$sql)) {
-    die('Error: ' . mysqli_error($con));
-}
 	mysqli_close($con);
 	
 ?>

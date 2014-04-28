@@ -11,10 +11,10 @@
 	WHERE categories.menu_id = 1
 	group by categories.cat_id";
 	$result = mysqli_query($con,$sql);
-	
 	while($row = mysqli_fetch_array($result)) {
 		?>
-		<script>//insert_item
+		<script>
+		//insert_item
 			$(document).ready(function() {
 			  var form = $('#itemForm<?php echo $row['cat_id']; ?>'); // contact form
 			  var submit = $('#itemFormSub<?php echo $row['cat_id']; ?>');   // submit button
@@ -30,13 +30,13 @@
 			      dataType: 'html', // request type html/json/xml
 			      data: form.serialize(), // serialize form data 
 			      beforeSend: function() {
-			        alert.fadeOut();
-			        submit.html('Sending....'); // change submit button text
+			        //alert.fadeOut();
+			        //submit.html('Sending....'); // change submit button text
 			      },
 			      success: function(data) {
 			      	$( "#unique-ul" ).load( "query_menu.php?menu_id=<?php echo $menu_id; ?>" );
-			        alert.html(data).fadeIn(); // fade in response data
-			        form.trigger('reset'); // reset form
+			        //alert.html(data).fadeIn(); // fade in response data
+			       // form.trigger('reset'); // reset form
 			        submit.html('Send Email'); // reset submit button text
 			      },
 			      error: function(e) {
@@ -46,9 +46,11 @@
 			  });
 			});
 		</script>
+
+		
+		
 		<?php
-		echo "<div id='alert" . $row['cat_id'] . "'></div>";
-		echo "<li class='row clearfix cursor-sort'><div><h3>" . $row['cat_categ'] . "</h3>
+		echo "<li id='" . $row['cat_id'] . "'" . "class='row clearfix cursor-sort'><div><h3>" . $row['cat_categ'] . "</h3>
 		<h5>" . $row['cat_desc'] . "</h5>";
 			//add item form
 			echo "<div class='formWrap'><form class='itemForm' id='itemForm" . $row['cat_id'] . "'" . "action='" . "method='POST'>"; //insert_item.php?item_menu=" . $menu_id . "
@@ -60,22 +62,22 @@
 			echo "<input type='hidden' name='position' value='1' /> ";
 		    echo "<input type='submit' id='itemFormSub" . $row['cat_id'] . "' value='Add Item' class='btn btn-primary btn-xs'/>";
 		    echo "</form></div>";
-				echo "<ul>";
+				echo "<ul id='" . $row['cat_id'] . "' " . " >";
 				$items = explode(",", $row['items']);
 				$prices = explode(",", $row['prices']);
 				$descriptions = explode(",", $row['descriptions']);
 				$item_ids = explode(",", $row['item_ids']);
 				foreach ($items as $key => $item) {
 				$item_id = $item_ids[$key];	
-				echo "<li id='" . $item_id . "' " . "class='list-group-item col-sm-6 col-xs-12 cursor-sort pull-left'><div class='col-xs-6'>" . "<h4>" .  $item . "</h4>" . "</div>";
+				echo "<li id='" . $item_id . "' " . "class='list-group-item col-sm-6 col-xs-12 cursor-sort pull-left fade'><div id='" . $row['cat_id'] . "' " . " class='col-xs-6'>" . "<h4>" .  $item . "</h4>" . "</div>";
 				$price = $prices[$key];
 				$description = $descriptions[$key];
 				
 				echo "<div class='col-xs-6 text-right nowrap'>" . $price . "</div>";
 				echo "<div class='col-xs-12'>" . $description . "</div>";
-				echo "</li>";
-				
+				echo "</li>"; 
 				}
 		echo "</ul>";
 	}
 ?>
+	

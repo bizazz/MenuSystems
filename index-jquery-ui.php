@@ -78,6 +78,7 @@ $menu_id = 1;
 	</div>	
 	
 	<!-- begin menu -->
+	<div class="results"></div>
 	<ul id="unique-ul">
 		
 	</ul>
@@ -118,6 +119,7 @@ $menu_id = 1;
     $( "#unique-ul" ).sortable({ scroll: true });
     $( "#unique-ul" ).sortable({ tolerance: "pointer" });
     $( "#unique-ul" ).sortable({ helper: "clone" });
+    $( "#unique-ul" ).sortable({ forcePlaceholderSize: true });
 	});
 	</script>
     
@@ -146,11 +148,9 @@ $menu_id = 1;
 	    });
 		</script>
 		
-		<script>
-		    $('input[type="submit"]').one('click', function() {
-			     $('#unique-ul').load("query_menu.php?menu_id=" + menu_id)
-			});
-		</script>	
+		
+		
+		
 		
   </body>
 </html>
