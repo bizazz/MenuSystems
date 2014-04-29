@@ -46,7 +46,11 @@
 			  });
 			});
 		</script>
-
+		<script>
+		    //fade in new item
+		    $(window).load(function() {
+				$( "ul#<?php echo $row['cat_id'];?>:last-child" ).fadeOut().fadeIn('slow');
+		</script>
 		
 		
 		<?php
