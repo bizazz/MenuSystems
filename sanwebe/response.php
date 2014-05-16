@@ -1,16 +1,15 @@
 <?php
 //include db configuration file
-include ('connect.php');
-$item_menu = $_POST['item_menu'];
-$item_cat = $_POST['item_cat'];
-$item_item = $_POST['item_item'];
-$item_price = $_POST['item_price'];
-$item_desc = $_POST['item_desc'];
-$position = $_POST['position'];
-$visible = 'yes';
+include_once("config.php");
 
-	if(mysqli_query("INSERT INTO items (item_menu, item_cat, item_item, item_price, item_desc, position, visible)
-	VALUES ('$item_menu','$item_cat', '$item_item', '$item_price', '$item_desc', '$position', $visible)"))
+if(isset($_POST["content_txt"]) && strlen($_POST["content_txt"])>0) 
+{	//check $_POST["content_txt"] is not empty
+
+	//sanitize post value, PHP filter FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH Strip tags, encode special characters.
+	$contentToSave = filter_var($_POST["content_txt"],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); 
+	
+	// Insert sanitize string in record
+	if(mysql_query("INSERT INTO add_delete_record(content) VALUES('".$contentToSave."')"))
 	{
 		 //Record was successfully inserted, respond result back to index page
 		  $my_id = mysql_insert_id(); //Get ID of last inserted row from MySQL

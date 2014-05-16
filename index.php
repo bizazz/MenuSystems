@@ -1,5 +1,17 @@
-<?php
-$menu_id = 1;
+<?php 
+	
+	include ('connect.php');
+	
+	//$menu_id = $_GET['menu_id'];
+	$menu_id = 1;
+	
+	$sql = "
+	SELECT 
+	categories.cat_id,categories.cat_categ,categories.cat_desc,group_concat(items.item_item) as items,group_concat(items.item_price)as prices,group_concat(items.item_desc)as descriptions,group_concat(items.item_id) as item_ids
+	FROM items items LEFT JOIN categories categories ON items.item_cat = categories.cat_id 
+	WHERE categories.menu_id = 1
+	group by categories.cat_id";
+	$result = mysqli_query($con,$sql);		
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +28,7 @@ $menu_id = 1;
     
     <!-- custom CSS  -->
     <link href="css/menusystems.css" rel="stylesheet">
-    <link href="jquery-sortable/application.css" rel="stylesheet">
+    <link href="jquery-ui/application.css" rel="stylesheet">
     
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -34,9 +46,11 @@ $menu_id = 1;
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    
   </head>
 
-  <body class="">
+  <body>
   	
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -75,13 +89,71 @@ $menu_id = 1;
     <div class="container">
       <div class="page-header">
         <h1>Menu Name</h1>
- 	</div>	
+	</div>	
 	
-	<!--begin menu<div id="serialize_output2"></div>-->
-	
-	<ol class="default vertical panel list-group-item ">
-
-	</ol>
+	<!-- begin menu -->
+	<ul id="unique-ul">
+		<?php while($row = mysqli_fetch_array($result)) { ?>
+		<li id="<?php echo $row['cat_id']; ?>" class="row clearfix cursor-sort">
+			<div>
+				<h3><?php echo $row['cat_categ']; ?></h3>
+					<h5><?php echo $row['cat_desc']; ?></h5>
+			</div>
+					<div class="formWrap">
+						<form action="insert_item.php" id="add_item<?php echo $row['cat_id']; ?>" >
+							<input type="hidden" name="item_menu" id="item_menu<?php echo $row['cat_id']; ?>" value="<?php echo $menu_id; ?>">
+							<input type="hidden" name="item_cat" id="item_cat<?php echo $row['cat_id']; ?>" value="<?php echo $row['cat_id']; ?>">
+							<input type="hidden" name="item_item" id="item_item<?php echo $row['cat_id']; ?>" value="New Item">
+							<input type="hidden" name="item_price" id="item_price<?php echo $row['cat_id']; ?>" value="Empty Price">
+							<input type="hidden" name="item_desc" id="item_desc<?php echo $row['cat_id']; ?>" value="New Description">
+							<input type="hidden" name="position" id="position<?php echo $row['cat_id']; ?>" value="1">
+							<input type="submit" id="FormSubmit<?php echo $row['cat_id']; ?>" value="Add Item" class="btn btn-primary btn-xs">
+						</form>
+						<script>
+							// Attach a submit handler to the form
+							$( "add_item<?php echo $row['cat_id']; ?>" ).submit(function( event ) {
+							 
+							  // Stop form from submitting normally
+							  event.preventDefault();
+							 
+							  // Get some values from elements on the page:
+							  var $form = $( this ),
+							    term = $form.find( "input[name='s']" ).val(),
+							    url = $form.attr( "action" );
+							 
+							  // Send the data using post
+							  var posting = $.post( url, { s: term } );
+							 
+							  // Put the results in a div
+							  posting.done(function( data ) {
+							    var content = $( data ).find( ".list-group-item" );
+							    $( "#result" ).empty().append( content );
+							  });
+							});
+						</script>
+					</div>
+					<ul id="<?php echo $row['cat_id']; ?>">
+						<?php
+						$items = explode(",", $row['items']);
+						$prices = explode(",", $row['prices']);
+						$descriptions = explode(",", $row['descriptions']);
+						$item_ids = explode(",", $row['item_ids']);
+						foreach ($items as $key => $item) {
+						$item_id = $item_ids[$key];	
+						$price = $prices[$key];
+						$description = $descriptions[$key];
+						?>
+						<li id="<?php echo $item_id; ?>" class="list-group-item col-sm-6 col-xs-12 cursor-sort pull-left">
+							<div id="<?php echo $row['cat_id']; ?>" class="col-xs-6">
+								<h4><?php echo $item; ?></h4>
+							</div>
+							<div class="col-xs-6 text-right nowrap"><?php echo $price; ?></div>
+							<div class="col-xs-12"><?php echo $description; ?></div>
+						</li>
+						<div id="result"></div>
+		<?php }
+			} ?>
+	</ul>
 	<!--end  menu-->
 	
 	
@@ -89,63 +161,40 @@ $menu_id = 1;
 
 	<!-- container end
     ================================================== -->
-      </div>
+    </div>
       
     <div id="footer">
       <div class="container">
         <p class="text-muted">© MenuSystems by Bizazz 2014</p>
       </div>
     </div>
-    <input type="hidden" id="menu_id" value="<?php echo $menu_id; ?> "/>
-
 
     <!-- Core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="jquery/jquery-1.11.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src='jquery-sortable/application.js'></script>
+    <script src='jquery-ui/js/jquery-ui-1.10.4.min.js'></script>
+    <script src='jquery-form/jquery.form.min.js'></script>
     
     <!-- Sortable Items -->
     <script>
-	var group = $("ol.default").sortable({
-	  group: 'serialization',
-	  onDrop: function (item, container, _super) {
-	    var data = group.sortable("serialize").get();
-	
-	    var jsonString = JSON.stringify(data, null, ' ');
-	
-	    $('#serialize_output2').text(jsonString);
-	    _super(item, container)
-	  }
-	})
+	$(function(){
+    $('#unique-ul').sortable({
+    	items:'li',
+    	cursor: "move",
+    	toleranceElement: '> div'
+    	});
+    $( "#unique-ul" ).sortable({ cursorAt: { left: 5 } });
+    $( "#unique-ul" ).sortable({ opacity: 1 });
+    $( "#unique-ul" ).sortable({ revert: true });
+    $( "#unique-ul" ).sortable({ scroll: true });
+    $( "#unique-ul" ).sortable({ tolerance: "pointer" });
+    $( "#unique-ul" ).sortable({ helper: "clone" });
+    $( "#unique-ul" ).sortable({ forcePlaceholderSize: true });
+	});
 	</script>
-    
-    <!-- Load url parameter and menu Data-->
-	<script type="text/javascript">
-	$(document).ready(function() {
-		function getUrlParameter(sParam)
-	{
-	    var sPageURL = window.location.search.substring(1);
-	    var sURLVariables = sPageURL.split('&');
-	    for (var i = 0; i < sURLVariables.length; i++) 
-	    {
-	        var sParameterName = sURLVariables[i].split('=');
-	        if (sParameterName[0] == sParam) 
-	        {
-	            return sParameterName[1];
-	        }
-	    }
-	}
-		var menu_id = getUrlParameter('menu_id');
-    	$('ol.default').load("query_menu.php?menu_id=" + menu_id, 
-		    {
-		    } 
-		);
-    });
-	</script>
-
-			
-		
+	
+	
   </body>
 </html>

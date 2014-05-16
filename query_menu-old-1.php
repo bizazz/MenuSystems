@@ -1,49 +1,3 @@
-$topicname = '';
-
-	// open list of topics
-	echo "<ol class='default vertical'>";
-	
-	// loop through topics
-	while($row = mysql_fetch_array($result)) {
-	    if (!$row['TopicID']) {
-	        // fake topic name for unsorted stuff
-	        $row['TopicName'] = 'Sort Me';
-	    }
-	    if ($topicname != $row['TopicName']) {
-	        if($topicname != ''){
-	            // had a topic name, means we opened a list
-	            // that hasn't been closed, close it.
-	            echo "</ol>";
-	        }
-	        // print this topic and open the list of articles
-	        echo "<li>" . $row['TopicName'] . '</li><ol>';
-	        // update the current topic to be this TopicName
-	        $topicname = $row['TopicName']; 
-	    }
-	    // the news item
-	    echo "<li>" . $row['NewsID'] . "</li>";
-	}
-	if($topicname != ''){
-	    // we saw at least one TopicName, we need to close
-	    // the last open list.
-	    echo "</ol>";
-	}
-	// end topic list
-	echo "</ol>";
-	
-	
-	
-	echo "<div col-xs-12'><form class='itemForm' id='itemForm_" . $row['cat_id'] . "'" . "action='insert_item.php?menu_id=" . $menu_id . "'" . "method='POST'>"; 
-		    echo "<input type='hidden' name='menu_id' value='" . $menu_id . "' /> ";
-		    echo "<input type='hidden' name='item_cat' value='" . $row['cat_id'] . "' /> ";
-			echo "<input type='hidden' name='item_item' value='Item' /> ";
-			echo "<input type='hidden' name='item_price' value='Price' /> ";
-			echo "<input type='hidden' name='item_desc' value='Description' /> ";
-			echo "<input type='hidden' name='position' value='1' /> ";
-		    echo "<input type='submit' value='Add Item' class='submit btn btn-primary btn-xs'/>";
-		    echo "</form></div>";
-		    
-		    
 <?php 
 	
 	include ('connect.php');
@@ -58,7 +12,44 @@ $topicname = '';
 	group by categories.cat_id";
 	$result = mysqli_query($con,$sql);
 	while($row = mysqli_fetch_array($result)) {
+		?>
+		<script>
+		//insert_item
+			$(document).ready(function() {
+			  var form = $('#itemForm<?php echo $row['cat_id']; ?>'); // contact form
+			  var submit = $('#itemFormSub<?php echo $row['cat_id']; ?>');   // submit button
+			  var alert = $('#alert<?php echo $row['cat_id']; ?>'); // alert div for show alert message
+			
+			  // form submit event
+			  form.on('submit', function(e) {
+			    e.preventDefault(); // prevent default form submit
+			
+			    $.ajax({
+			      url: 'insert_item.php?item_menu=<?php echo $menu_id ; ?>', // form action url
+			      type: 'POST', // form submit method get/post
+			      dataType: 'html', // request type html/json/xml
+			      data: form.serialize(), // serialize form data 
+			      beforeSend: function() {
+			        //alert.fadeOut();
+			        //submit.html('Sending....'); // change submit button text
+			      },
+			      success: function(data) {
+			      	$( "#unique-ul" ).load( "query_menu.php?menu_id=<?php echo $menu_id; ?>" );
+			        //alert.html(data).fadeIn(); // fade in response data
+			       // form.trigger('reset'); // reset form
+			        submit.html('Send Email'); // reset submit button text
+			      },
+			      error: function(e) {
+			        console.log(e)
+			      }
+			    });
+			  });
+			});
+		</script>
 
+		
+		
+		<?php
 		echo "<li id='" . $row['cat_id'] . "'" . "class='row clearfix cursor-sort'><div><h3>" . $row['cat_categ'] . "</h3>
 		<h5>" . $row['cat_desc'] . "</h5>";
 			//add item form
@@ -89,4 +80,3 @@ $topicname = '';
 		echo "</ul>";
 	}
 ?>
-	
